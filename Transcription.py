@@ -157,6 +157,7 @@ class Transcription:
 
     speakers = {}
     for speaker_tag in dic['speakers']:
+      # the json will automatically convert keys in a dict from int to string
       speakers[int(speaker_tag)] = dic['speakers'][speaker_tag]
 
     return Transcription(sentences = sentences, speakers = speakers)

@@ -25,24 +25,14 @@ def speechToText(audio_uri, lang = 'en-US', speaker_num = 1):
 
 # Parse the transcription to a dictionary and store it to json
 def parseTranscription(response, file_name, dir):
-  import os
-  import json
-  # The key is the speaker tag (0 - speaker_num-1) 
-  # followed by a space then followed by the time interval 
-  # of the paragraph like 'start_time-end_time' (no space in between)
+  # parse the result to Transcription class
 
-  # The value is the string of the transcription
-  res = {}
+  res = Transcription()
 
   for i in range(len(response.results)):
-    sentence = response.results[i].alternatives[0]
+    content = response.results[i].alternatives[0]
     start_time = sentence.words[0].start_time
     end_time = sentence.words[-1].end_time
     res[str(sentence.words[0].speaker_tag) + ' ' + str(start_time.seconds + start_time.nanos * 1e-9) + "-" + str(end_time.seconds + start_time.nanos * 1e-9)] = sentence.transcript
 
-  # Store res to json in the directory given
-  json_dic = json.dumps(res)
-  abs_dir = os.path.join(dir, file_name)
-  f = open(abs_dir, "w")
-  f.write(json_dic)
-  f.close()
+  return res
