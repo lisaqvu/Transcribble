@@ -1,6 +1,6 @@
 class Timestamp:
     # Timestamp object consists of a start_time and a end_time
-    # Each is a string like "hh:mm:ss.sss" (the same as the timestamp in srt files, and hour must started at 00)
+    # Each is a string like "hh:mm:ss,sss" (the same as the timestamp in srt files, and hour must started at 00)
 
     def __init__(self, start_time, end_time):
       import re
@@ -87,6 +87,9 @@ class Transcription:
   def __init__(self, sentences = [], speakers = {}):
     self.__sentences = sentences
     self.__speakers = speakers
+
+  def sentences(self):
+    return self.__sentences
 
   def addSpeaker(self, speaker_tag, name):
     if type(speaker_tag) != int or type(name) != str:
