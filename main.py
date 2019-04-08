@@ -1,11 +1,12 @@
 from flask import Flask, request
 from google.cloud import storage
+import logging
 import os
 
 app = Flask(__name__)
 
 # Configure this environment variable via app.yaml
-#CLOUD_STORAGE_BUCKET = os.environ['CLOUD_STORAGE_BUCKET']
+# CLOUD_STORAGE_BUCKET = os.environ['CLOUD_STORAGE_BUCKET']
 
 
 @app.route('/')
