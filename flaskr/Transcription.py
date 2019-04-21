@@ -6,13 +6,13 @@ class Timestamp:
         import re
         time_re = re.compile(r"\d{2,}:\d{2}:\d{2},\d{3}")
         if time_re.fullmatch(start_time)==None or time_re.fullmatch(end_time)==None:
-            raise AttributeError('The start time and end time should match the regex r"\d{2,}:\d{2}:\d{2},\d{3}"')
+            raise TypeError('The start time and end time should match the regex r"\d{2,}:\d{2}:\d{2},\d{3}"')
 
         if not (0<=int(start_time[-9:-7])<=60 and 0<=int(end_time[-9:-7])<=60):
-            raise AttributeError('The minutes of both start_time and end_time should be between 0 and 60')
+            raise TypeError('The minutes of both start_time and end_time should be between 0 and 60')
 
         if not (0<=int(start_time[-6:-4])<=60 and 0<=int(end_time[-6:-4])<=60):
-            raise AttributeError('The seconds of both start_time and end_time should be between 0 and 60')
+            raise TypeError('The seconds of both start_time and end_time should be between 0 and 60')
 
         self.__start_time = start_time
         self.__end_time = end_time
@@ -27,13 +27,13 @@ class Timestamp:
         import re
         time_re = re.compile(r"\d{2,}:\d{2}:\d{2},\d{3}")
         if time_re.fullmatch(start_time)==None or time_re.fullmatch(end_time)==None:
-            raise AttributeError('The start time and end time should match the regex r"\d{2,}:\d{2}:\d{2},\d{3}"')
+            raise TypeError('The start time and end time should match the regex r"\d{2,}:\d{2}:\d{2},\d{3}"')
 
         if not (0<=int(start_time[-9:-7])<=60 and 0<=int(end_time[-9:-7])<=60):
-            raise AttributeError('The minutes of both start_time and end_time should be between 0 and 60')
+            raise TypeError('The minutes of both start_time and end_time should be between 0 and 60')
 
         if not (0<=int(start_time[-6:-4])<=60 and 0<=int(end_time[-6:-4])<=60):
-            raise AttributeError('The seconds of both start_time and end_time should be between 0 and 60')
+            raise TypeError('The seconds of both start_time and end_time should be between 0 and 60')
 
         self.__start_time = start_time
         self.__end_time = end_time
@@ -52,7 +52,7 @@ class Sentence:
 
     def __init__(self, timestamp, content, speaker_tag = 0):
         if type(timestamp) != Timestamp or type(content) != str or type(speaker_tag) != int:
-            raise AttributeError('Type of timestamp must be Timestamp. Type of content must be str. Type of speaker_tag must be int')
+            raise TypeError('Type of timestamp must be Timestamp. Type of content must be str. Type of speaker_tag must be int')
 
         self.__timestamp = timestamp
         self.__content = content
@@ -77,7 +77,7 @@ class Sentence:
             speaker_tag = self.__speaker_tag
 
         if type(content) != str or type(speaker_tag) != int:
-            raise AttributeError('Type of content must be str. Type of speaker_tag must be int')
+            raise TypeError('Type of content must be str. Type of speaker_tag must be int')
 
         self.__content = content
         self.__speaker_tag = speaker_tag
@@ -93,17 +93,17 @@ class Transcription:
 
     def addSpeaker(self, speaker_tag, name):
         if type(speaker_tag) != int or type(name) != str:
-            raise AttributeError('Type of speaker_tag must be int, and type of name must be str')
+            raise TypeError('Type of speaker_tag must be int, and type of name must be str')
         self.__speakers[speaker_tag] = name
 
     def appendSentence(self, sentence):
         if type(sentence) != Sentence:
-            raise AttributeError('Type of sentence must Be Sentence')
+            raise TypeError('Type of sentence must Be Sentence')
         self.__sentences += [sentence]
 
     def addSentence(self, sentence, index):
         if type(sentence) != Sentence:
-            raise AttributeError('Type of sentence must Be Sentence')
+            raise TypeError('Type of sentence must Be Sentence')
         self.__sentences.insert(index, sentence)
 
     def deleteSentence(self, index):
