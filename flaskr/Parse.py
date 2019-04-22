@@ -1,14 +1,16 @@
 from Transcription import *
 
-# import soundfile as sf
+import soundfile
 import librosa
 import librosa.display
 import librosa.output
 
+from moviepy.editor import *
+
 import os.path as path
 import os
 
-from pydub import AudioSegment
+# from pydub import AudioSegment
 
 
 def parseSrt(file):
@@ -42,11 +44,11 @@ def parseAudio(file, start_time = -1, end_time = -1):
 
     # audio files must be mono or stereo (5.1 is not supported)
     # .flac is not supported
-    sound = AudioSegment.from_file(file, path.splitext(file)[1][1:])
-    sound = sound.set_sample_width(2)
-    sound.export(temp_file, format = 'wav')
+    #sound = AudioSegment.from_file(file, path.splitext(file)[1][1:])
+    #sound = sound.set_sample_width(2)
+    #sound.export(temp_file, format = 'wav')
 
-    y, sr = librosa.load(temp_file, mono = True, sr = None)
+    y, sr = librosa.load(file, mono = True, sr = None)
 
     if start_time == -1:
         start_time = 0
@@ -65,10 +67,16 @@ def parseAudio(file, start_time = -1, end_time = -1):
 
     librosa.output.write_wav(temp_file, y, sr)
 
-    # data, samplerate = soundfile.read(temp_file)
-    # sf.write(temp_file, data, samplerate, subtype='PCM_16')
+    data, samplerate = soundfile.read(temp_file)
+    soundfile.write(temp_file, data, samplerate, subtype='PCM_16')
 
     return librosa.display.waveplot(y, sr = sr)
 
-#def parseVideo(file, start_time = -1, end_time = -1):
-    
+def parseVideo(file, start_time = -1, end_time = -1):
+    if not path.exists(r'./temp_files'):
+        os.mkdir(r'./temp_files')
+    temp_file = path.join(r'./temp_files', path.splitext(path.basename(file))[0] + '.wav')
+
+    audioclip = AudioFileClip(file)
+    audioclip.write_audiofile(temp_file)
+    parseAudio(temp_file, start_time = -1, end_time = -1)
