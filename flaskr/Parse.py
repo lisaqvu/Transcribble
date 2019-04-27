@@ -38,12 +38,13 @@ def parseSrt(file):
     return trans
 
 def parseAudio(file, start_time = -1, end_time = -1):
+    # audio files must be mono or stereo (5.1 is not supported)
+    # .flac is not supported
+    
     if not path.exists(r'./temp_files'):
         os.mkdir(r'./temp_files')
     temp_file = path.join(r'./temp_files', path.splitext(path.basename(file))[0] + '.wav')
 
-    # audio files must be mono or stereo (5.1 is not supported)
-    # .flac is not supported
     #sound = AudioSegment.from_file(file, path.splitext(file)[1][1:])
     #sound = sound.set_sample_width(2)
     #sound.export(temp_file, format = 'wav')
