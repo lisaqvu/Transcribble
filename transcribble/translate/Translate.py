@@ -1,4 +1,5 @@
 def translate(transcription, lang1, lang2):
+    from Transcription import *
     from google.cloud import translate
 
     client = translate.Client()
