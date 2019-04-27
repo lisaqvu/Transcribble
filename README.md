@@ -7,9 +7,16 @@ Transcribble is a simple web editor for automatic transcribing and translating o
 Transcribble is built with Python Flask, for more information on how to set up the enviroment, check out [here](http://flask.pocoo.org/docs/1.0/quickstart/). The `requirements.txt` file includes all the necessary packages for the app.
 
 In order to run the application on your virtual environment, run
+<<<<<<< HEAD
 ``$ export FLASK_APP=transcribble
     $ export FLASK_ENV=development
     $ python -m flask run``
+=======
+``$ export FLASK_APP= transcribble
+    $ export FLASK_ENV=development
+    $ python -m flask run
+    * Running on http://127.0.0.1:5000/``
+>>>>>>> current
 
 ## Running individual files
 

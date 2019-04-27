@@ -7,6 +7,7 @@ Flask-SQLAlchemy==2.3.2
 PyMySQL==0.9.2
 six==1.11.0
 <<<<<<< HEAD
+<<<<<<< HEAD
 flask-login==0.4.1
 =======
 <<<<<<< HEAD
@@ -18,3 +19,6 @@ soundfile==0.10.2
 librosa==0.6.3
 >>>>>>> a03263e... README
 >>>>>>> 14ee067... README
+=======
+flask-login==0.4.1
+>>>>>>> current
