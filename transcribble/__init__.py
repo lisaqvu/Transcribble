@@ -1,7 +1,7 @@
 import os
 
 from flask_environments import Environments
-from flask import request, Flask
+from flask import request, Flask, render_template
 from google.cloud import storage
 import logging
 import yaml, json
@@ -10,6 +10,7 @@ with open('././app.yaml') as f:
     envfile = yaml.safe_load(f)
 
 def create_app(test_config=None):
+    from . import edit, export, transcribe, translate, db
     # create and configure the app
     app = Flask(__name__, instance_relative_config=True)
     app.config.from_mapping(
@@ -43,13 +44,14 @@ def create_app(test_config=None):
 
     @app.route('/')
     def index():
+        # return render_template("base.html")
         return """
     <form method="POST" action="/upload" enctype="multipart/form-data">
         <input type="file" name="file">
         <input type="submit">
     </form>
     """
-
+    # HELPER TO GET NEXT ID FROM SQL
 
     @app.route('/upload', methods=['POST'])
     def upload():
