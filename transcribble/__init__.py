@@ -45,12 +45,8 @@ def create_app(test_config=None):
     @app.route('/')
     def index():
         # return render_template("base.html")
-        return """
-    <form method="POST" action="/upload" enctype="multipart/form-data">
-        <input type="file" name="file">
-        <input type="submit">
-    </form>
-    """
+        return render_template("upload.html")
+
     # HELPER TO GET NEXT ID FROM SQL
 
     @app.route('/upload', methods=['POST'])
