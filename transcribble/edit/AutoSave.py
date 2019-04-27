@@ -1,5 +1,4 @@
 from google.cloud import storage
-import yaml
 
 def sessionNum():
     import random
