@@ -1,0 +1,24 @@
+{% extends "layout.html" %}
+
+{% block title %}Home{% endblock %}
+
+{% block body %}
+  <h2 class="text-center">Recent Posts</h2>
+  {% if posts %}
+    <div class="posts">
+      <ul>
+        {% for post in posts %}
+          <div class="row">
+            <div class="offset-sm-2 col-sm-8">
+              <li>
+                <a href="/{{ post.slug }}" title="{{ post.title }}">{{ post.title }} <span>&nbsp; by {{ post.author_name }}</span></a>
+              </li>
+            </div>
+          </div>
+        {% endfor %}
+      </ul>
+    </div>
+  {% else %}
+    <p class="empty text-center">Uh-oh. There are no posts to view.</p>
+  {% endif %}
+{% endblock %}

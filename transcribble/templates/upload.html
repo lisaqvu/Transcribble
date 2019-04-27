@@ -1,0 +1,11 @@
+{% extends "layout.html" %}
+
+{% block title %}Home{% endblock %}
+
+{% block body %}
+  <h2 class="text-center">Upload</h2>
+  <form method="POST" action="/upload" enctype="multipart/form-data">
+      <input type="file" name="file">
+      <input type="submit">
+  </form>
+{% endblock %}
