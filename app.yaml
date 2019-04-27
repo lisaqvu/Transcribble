@@ -17,4 +17,4 @@ resources:
   disk_size_gb: 10
 
 env_variables:
-  CLOUD_STORAGE_BUCKET: transcribble
+  CLOUD_STORAGE_BUCKET: transcribble #use your bucket name here
