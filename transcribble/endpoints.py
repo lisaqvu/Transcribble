@@ -3,11 +3,8 @@ from .middlewares import login_required
 from flask import Flask, json, g, request
 import os
 
-from .Parse import *
-from .Transcription import *
-from .SpeechToText import *
-from .ExportToZip import *
-import Translate
+import upload, transcribe, translate, edit, export
+
 app = Flask(__name__)
 CORS(app)
 

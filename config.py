@@ -22,13 +22,13 @@ import os
 
 # The secret key is used by Flask to encrypt session cookies.
 SECRET_KEY = 'secret'
-
+GOOGLE_APPLICATION_CREDENTIALS="/home/lisaqvu/Coding/Transcribble-065270cb4656.json"
 # There are three different ways to store the data in the application.
 # You can choose 'datastore', 'cloudsql', or 'mongodb'. Be sure to
 # configure the respective settings for the one you choose below.
 # You do not have to configure the other data backends. If unsure, choose
 # 'datastore' as it does not require any additional configuration.
-DATA_BACKEND = 'datastore'
+DATA_BACKEND = 'cloudsql'
 
 # Google Cloud Project ID. This can be found on the 'Overview' page at
 # https://console.developers.google.com
@@ -72,6 +72,8 @@ if os.environ.get('GAE_INSTANCE'):
 else:
     SQLALCHEMY_DATABASE_URI = LOCAL_SQLALCHEMY_DATABASE_URI
 
-CLOUD_STORAGE_BUCKET = 'transcribble'
+CLOUD_STORAGE_BUCKET='transcribble'
 
 ALLOWED_EXTENSIONS = set(['srt', 'mov', 'mp4', 'wav'])
+GOOGLE_OAUTH2_CLIENT_ID = '263496115164-i4islhlen18f13l9erbusichkhue41kf.apps.googleusercontent.com'
+GOOGLE_OAUTH2_CLIENT_SECRET = 'Q3_MeVDlCBtY2Vbd1f6mhtut'

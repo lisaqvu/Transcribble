@@ -15,7 +15,6 @@
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 
-
 builtin_list = list
 
 
@@ -46,7 +45,7 @@ class File(db.Model):
     subtitleUrl = db.Column(db.String(255))
     createdBy = db.Column(db.String(255))
     createdById = db.Column(db.String(255))
-
+    
     def __repr__(self):
         return "<File(title='%s', createdBy=%s)" % (self.title, self.createdBy)
 

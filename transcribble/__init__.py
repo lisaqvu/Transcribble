@@ -3,36 +3,47 @@ import os
 from flask_environments import Environments
 from flask import request, Flask, render_template
 from google.cloud import storage
-import flask_login
 import logging
 import yaml, json
 
 with open('././app.yaml') as f:
     envfile = yaml.safe_load(f)
 
-def create_app(test_config=None):
+#def create_app(config, debug=False, testing=False, config_overrides=None):
+def create_app(config):
     from . import edit, export, transcribe, translate, db
     # create and configure the app
-    app = Flask(__name__, instance_relative_config=True)
+    # app = Flask(__name__, instance_relative_config=True)
 
-    if test_config is None:
-        # load the instance config, if it exists, when not testing
-        app.config.from_pyfile('config.py', silent=True)
-    else:
-        # load the test config if passed in
-        app.config.from_mapping(test_config)
+    # if test_config is None:
+    #     # load the instance config, if it exists, when not testing
+    #     app.config.from_pyfile('config.py', silent=True)
+    # else:
+    #     # load the test config if passed in
+    #     app.config.from_mapping(test_config)
 
-    # ensure the instance folder exists
-    try:
-        os.makedirs(app.instance_path)
-    except OSError:
-        pass
+    # # ensure the instance folder exists
+    # try:
+    #     os.makedirs(app.instance_path)
+    # except OSError:
+    #     pass
 
+    app = Flask(__name__)
+    app.config.from_object(config)
+    # app.debug = debug
+    # app.testing = testing
+
+    # if config_overrides:
+    #     app.config.update(config_overrides)
+
+    # # Configure logging
+    # if not app.testing:
+    #     logging.basicConfig(level=logging.INFO)
     # hacky fix
-    app.config.update(envfile['env_variables'])
-    os.environ.update(envfile['env_variables'])
+    # app.config.update(envfile['env_variables'])
+    # os.environ.update(envfile['env_variables'])
 
-    CLOUD_STORAGE_BUCKET = os.environ['CLOUD_STORAGE_BUCKET']
+    # CLOUD_STORAGE_BUCKET = os.environ['CLOUD_STORAGE_BUCKET']
 
     @app.route('/')
     def index():
