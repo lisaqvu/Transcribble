@@ -32,18 +32,18 @@ DATA_BACKEND = 'datastore'
 
 # Google Cloud Project ID. This can be found on the 'Overview' page at
 # https://console.developers.google.com
-PROJECT_ID = 'your-project-id'
+PROJECT_ID = 'transcribble-1551647449614'
 
 # CloudSQL & SQLAlchemy configuration
 # Replace the following values the respective values of your Cloud SQL
 # instance.
 CLOUDSQL_USER = 'root'
-CLOUDSQL_PASSWORD = 'your-cloudsql-password'
-CLOUDSQL_DATABASE = 'bookshelf'
+CLOUDSQL_PASSWORD = 'Transcribbler'
+CLOUDSQL_DATABASE = 'transcribble'
 # Set this value to the Cloud SQL connection name, e.g.
 #   "project:region:cloudsql-instance".
 # You must also update the value in app.yaml.
-CLOUDSQL_CONNECTION_NAME = 'your-cloudsql-connection-name'
+CLOUDSQL_CONNECTION_NAME = 'transcribble-1551647449614:us-central1:transcribble'
 
 # The CloudSQL proxy is used locally to connect to the cloudsql instance.
 # To start the proxy, use:
