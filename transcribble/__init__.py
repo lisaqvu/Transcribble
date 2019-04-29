@@ -6,12 +6,13 @@ from google.cloud import storage
 import logging
 import yaml, json
 
+from . import db 
+
 with open('././app.yaml') as f:
     envfile = yaml.safe_load(f)
 
 #def create_app(config, debug=False, testing=False, config_overrides=None):
 def create_app(config):
-    from . import edit, export, transcribe, translate, db
     # create and configure the app
     # app = Flask(__name__, instance_relative_config=True)
 
@@ -30,6 +31,7 @@ def create_app(config):
 
     app = Flask(__name__)
     app.config.from_object(config)
+
     # app.debug = debug
     # app.testing = testing
 
@@ -40,10 +42,10 @@ def create_app(config):
     # if not app.testing:
     #     logging.basicConfig(level=logging.INFO)
     # hacky fix
-    # app.config.update(envfile['env_variables'])
-    # os.environ.update(envfile['env_variables'])
+    app.config.update(envfile['env_variables'])
+    os.environ.update(envfile['env_variables'])
 
-    # CLOUD_STORAGE_BUCKET = os.environ['CLOUD_STORAGE_BUCKET']
+    CLOUD_STORAGE_BUCKET = os.environ['CLOUD_STORAGE_BUCKET']
 
     @app.route('/')
     def index():
@@ -76,7 +78,32 @@ def create_app(config):
 
         # The public URL can be used to directly access the uploaded file via HTTP.
         return blob.public_url
+    with app.app_context():
+        model = get_model()
+        model.init_app(app)
 
+    @app.route('/edit')
+    def edit():
+        return render_template("edit.html")
+
+        # [START init_app]
+    # Initalize the OAuth2 helper.
+    oauth2.init_app(
+        app,
+        scopes=['email', 'profile'],
+        authorize_callback=_request_user_info)
+    # [END init_app]
+
+    # [START logout]
+    # Add a logout handler.
+    @app.route('/logout')
+    def logout():
+        # Delete the user's profile and the credentials stored by oauth2.
+        del session['profile']
+        session.modified = True
+        oauth2.storage.delete()
+        return redirect(request.referrer or '/')
+    # [END logout]
 
     @app.errorhandler(500)
     def server_error(e):
@@ -94,10 +121,34 @@ def create_app(config):
     def not_found(e):
         return render_template("404.html")
 
+
     if __name__ == '__main__':
         # This is used when running locally. Gunicorn is used to run the
         # application on Google App Engine. See entrypoint in app.yaml.
         app.run(host='127.0.0.1', port=8080, debug=True)
 
     return app
-    
+
+def get_model():
+    from . import db
+    return model    
+
+# [START request_user_info]
+def _request_user_info(credentials):
+    """
+    Makes an HTTP request to the Google OAuth2 API to retrieve the user's basic
+    profile information, including full name and photo, and stores it in the
+    Flask session.
+    """
+    http = httplib2.Http()
+    credentials.authorize(http)
+    resp, content = http.request(
+        'https://www.googleapis.com/oauth2/v3/userinfo')
+
+    if resp.status != 200:
+        current_app.logger.error(
+            "Error while obtaining user profile: \n%s: %s", resp, content)
+        return None
+    session['profile'] = json.loads(content.decode('utf-8'))
+
+# [END request_user_info]    
