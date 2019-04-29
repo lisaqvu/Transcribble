@@ -25,4 +25,4 @@ beta_settings:
     #   "project:region:cloudsql-instance"
     # You must also update the values in config.py.
     #
-    # cloud_sql_instances: "your-cloudsql-connection-name" 
+    cloud_sql_instances: "transcribble-1551647449614:us-central1:transcribble" 
