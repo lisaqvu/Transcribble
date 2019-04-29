@@ -3,6 +3,7 @@ import os
 from flask_environments import Environments
 from flask import request, Flask, render_template
 from google.cloud import storage
+import flask_login
 import logging
 import yaml, json
 
@@ -13,10 +14,6 @@ def create_app(test_config=None):
     from . import edit, export, transcribe, translate, db
     # create and configure the app
     app = Flask(__name__, instance_relative_config=True)
-    app.config.from_mapping(
-        SECRET_KEY='dev',
-        #DATABASE=os.path.join(app.instance_path, 'flaskr.sqlite'),
-    )
 
     if test_config is None:
         # load the instance config, if it exists, when not testing
@@ -30,11 +27,6 @@ def create_app(test_config=None):
         os.makedirs(app.instance_path)
     except OSError:
         pass
-
-    # a simple page that says hello
-    @app.route('/hello')
-    def hello():
-        return 'Hello, World!'
 
     # hacky fix
     app.config.update(envfile['env_variables'])
@@ -83,6 +75,13 @@ def create_app(test_config=None):
         See logs for full stacktrace.
         """.format(e), 500
 
+    @app.errorhandler(403)
+    def permission_error(e):
+        return render_template("403.html")
+
+    @app.errorhandler(404)
+    def not_found(e):
+        return render_template("404.html")
 
     if __name__ == '__main__':
         # This is used when running locally. Gunicorn is used to run the
