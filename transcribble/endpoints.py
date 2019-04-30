@@ -2,14 +2,13 @@ from flask_cors import CORS
 from flask import Flask, json, g, request
 import os
 
-import oauth2, get_model, storage
-import upload, transcribe, translate, edit, export
+import get_model, storage
+from Transcription, Translate, SpeechToText, Parse import *
 
 app = Flask(__name__)
 CORS(app)
 
 @app.route("/parse", methods=["GET"])
-@oauth2.required
 def parse(bucket_name, audio_file = None, video_file = None, srt_file = None, start_time = -1, end_time = -1):
     if audio_file is not None:
         parseAudio(audio_file, bucket_name, start_time=start_time, end_time=end_time)
@@ -22,7 +21,6 @@ def parse(bucket_name, audio_file = None, video_file = None, srt_file = None, st
         trans.storeRaw('Transcription.json', r'./temp_files')
 
 @app.route("/transcribe", methods=["GET", "POST"])
-@oauth2.required
 def transcribe(audio_uri, lang = 'en-US', speaker_num = 1):
     assert request.method == 'GET'
     response = speechToText(audio_uri, lang = lang, speaker_num = speaker_num)
@@ -50,7 +48,6 @@ def get_translation():
     f = open(r'./temp_files/Translation.json', 'r')
     res = json.load(f.read())
     return json_response(res)
-
 
 @app.route("/export", methods=["GET"])
 @oauth2.required
