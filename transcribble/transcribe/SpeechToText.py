@@ -1,3 +1,4 @@
+from Transcription import Transcription
 # Using Google Api to get the transcription of the audio given its uri
 def speechToText(audio_uri, lang = 'en-US', speaker_num = 1):
   from google.cloud import speech_v1p1beta1 as speech
@@ -16,7 +17,10 @@ def speechToText(audio_uri, lang = 'en-US', speaker_num = 1):
   enable_word_time_offsets=True,
   enable_automatic_punctuation=True
   )
+<<<<<<< HEAD
 
+=======
+>>>>>>> a03263e... README
   # Get the transcription
   operation = client.long_running_recognize(config, audio)
   response = operation.result(timeout=90)
@@ -79,3 +83,7 @@ def parseTranscription(response):
         speaker = result.words[start_word].speaker_tag
 
   return trans
+<<<<<<< HEAD
+=======
+
+>>>>>>> a03263e... README

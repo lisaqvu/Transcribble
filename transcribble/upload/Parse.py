@@ -12,7 +12,6 @@ import os
 
 # from pydub import AudioSegment
 
-
 def parseSrt(file):
 
     f = open(file, 'r')
