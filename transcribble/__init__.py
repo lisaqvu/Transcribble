@@ -57,7 +57,6 @@ def create_app(config):
         # return render_template("base.html")
         return render_template("upload.html")
 
-    # HELPER TO GET NEXT ID FROM SQL
 
     @app.route('/upload', methods=['POST'])
     def upload():
