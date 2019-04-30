@@ -1,15 +1,15 @@
 from flask_cors import CORS
-from .middlewares import login_required
 from flask import Flask, json, g, request
 import os
 
+import oauth2, get_model, storage
 import upload, transcribe, translate, edit, export
 
 app = Flask(__name__)
 CORS(app)
 
 @app.route("/parse", methods=["GET"])
-@login_required
+@oauth2.required
 def parse(bucket_name, audio_file = None, video_file = None, srt_file = None, start_time = -1, end_time = -1):
     if audio_file is not None:
         parseAudio(audio_file, bucket_name, start_time=start_time, end_time=end_time)
@@ -22,7 +22,7 @@ def parse(bucket_name, audio_file = None, video_file = None, srt_file = None, st
         trans.storeRaw('Transcription.json', r'./temp_files')
 
 @app.route("/transcribe", methods=["GET", "POST"])
-@login_required
+@oauth2.required
 def transcribe(audio_uri, lang = 'en-US', speaker_num = 1):
     assert request.method == 'GET'
     response = speechToText(audio_uri, lang = lang, speaker_num = speaker_num)
@@ -40,7 +40,7 @@ def store_transcription(json_dict):
     trans.storeRaw('Transcription.json', r'./temp_files')
 
 @app.route("/translate", methods=["GET"])
-@login_required
+@oauth2.required
 def translate(transcription, lang1, lang2):
     assert request.method == 'GET'
     trans = Translate.translate(transcription, lang1, lang2)
@@ -53,7 +53,7 @@ def get_translation():
 
 
 @app.route("/export", methods=["GET"])
-@login_required
+@oauth2.required
 def export():
     if not path.exists(r'./temp_files'):
         os.mkdir(r'./temp_files')

@@ -6,7 +6,12 @@ from google.cloud import storage
 import logging
 import yaml, json
 
-from . import db 
+from . import db
+
+import httplib2
+# from oauth2client.contrib.flask_util import UserOAuth2
+
+# oauth2 = UserOAuth2()
 
 with open('././app.yaml') as f:
     envfile = yaml.safe_load(f)
@@ -59,6 +64,8 @@ def create_app(config):
         """Process the uploaded file and upload it to Google Cloud Storage."""
         uploaded_file = request.files.get('file')
 
+        from. import SpeechToText
+
         if not uploaded_file:
             return 'No file uploaded.', 400
 
@@ -75,12 +82,14 @@ def create_app(config):
             uploaded_file.read(),
             content_type=uploaded_file.content_type
         )
-
+        url = blob.public_url.replace('https://storage.googleapis.com/', 'gs://')
+        output = SpeechToText.speechToText(url)
         # The public URL can be used to directly access the uploaded file via HTTP.
-        return blob.public_url
-    with app.app_context():
-        model = get_model()
-        model.init_app(app)
+        return output
+        #return render_template("edit.html", title=upload_file.filename, post=output)
+    # with app.app_context():
+    #     model = get_model()
+    #     model.init_app(app)
 
     @app.route('/edit')
     def edit():
@@ -88,10 +97,10 @@ def create_app(config):
 
         # [START init_app]
     # Initalize the OAuth2 helper.
-    oauth2.init_app(
-        app,
-        scopes=['email', 'profile'],
-        authorize_callback=_request_user_info)
+    # oauth2.init_app(
+    #     app,
+    #     scopes=['email', 'profile'],
+    #     authorize_callback=_request_user_info)
     # [END init_app]
 
     # [START logout]
@@ -129,26 +138,27 @@ def create_app(config):
 
     return app
 
-def get_model():
-    from . import db
-    return model    
+# def get_model():
+#     from . import db
+#     model = db
+#     return model    
 
-# [START request_user_info]
-def _request_user_info(credentials):
-    """
-    Makes an HTTP request to the Google OAuth2 API to retrieve the user's basic
-    profile information, including full name and photo, and stores it in the
-    Flask session.
-    """
-    http = httplib2.Http()
-    credentials.authorize(http)
-    resp, content = http.request(
-        'https://www.googleapis.com/oauth2/v3/userinfo')
+# # [START request_user_info]
+# def _request_user_info(credentials):
+#     """
+#     Makes an HTTP request to the Google OAuth2 API to retrieve the user's basic
+#     profile information, including full name and photo, and stores it in the
+#     Flask session.
+#     """
+#     http = httplib2.Http()
+#     credentials.authorize(http)
+#     resp, content = http.request(
+#         'https://www.googleapis.com/oauth2/v3/userinfo')
 
-    if resp.status != 200:
-        current_app.logger.error(
-            "Error while obtaining user profile: \n%s: %s", resp, content)
-        return None
-    session['profile'] = json.loads(content.decode('utf-8'))
+#     if resp.status != 200:
+#         current_app.logger.error(
+#             "Error while obtaining user profile: \n%s: %s", resp, content)
+#         return None
+#     session['profile'] = json.loads(content.decode('utf-8'))
 
 # [END request_user_info]    

@@ -10,15 +10,17 @@ def speechToText(audio_uri, lang = 'en-US', speaker_num = 1):
 
 
   config = speech.types.RecognitionConfig(
-  language_code = lang,
-  enable_speaker_diarization = True,
-  diarization_speaker_count=speaker_num,
-  enable_word_time_offsets=True,
-  enable_automatic_punctuation=True
+    language_code = lang,
+    enable_speaker_diarization = True,
+    diarization_speaker_count=speaker_num,
+    enable_word_time_offsets=True,
+    enable_automatic_punctuation=True
   )
+  import pdb 
+  pdb.set_trace()
 
   # Get the transcription
-  operation = client.long_running_recognize(config, audio)
+  operation = client.long_running_recognize(config=config, audio=audio)
   response = operation.result(timeout=90)
 
   return response
@@ -78,4 +80,5 @@ def parseTranscription(response):
         content = ''
         speaker = result.words[start_word].speaker_tag
 
-  return trans
+  return transcribe
+

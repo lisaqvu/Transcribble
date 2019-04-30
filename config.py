@@ -75,5 +75,5 @@ else:
 CLOUD_STORAGE_BUCKET='transcribble'
 
 ALLOWED_EXTENSIONS = set(['srt', 'mov', 'mp4', 'wav'])
-GOOGLE_OAUTH2_CLIENT_ID = '263496115164-i4islhlen18f13l9erbusichkhue41kf.apps.googleusercontent.com'
-GOOGLE_OAUTH2_CLIENT_SECRET = 'Q3_MeVDlCBtY2Vbd1f6mhtut'
+# GOOGLE_OAUTH2_CLIENT_ID = '263496115164-i4islhlen18f13l9erbusichkhue41kf.apps.googleusercontent.com'
+# GOOGLE_OAUTH2_CLIENT_SECRET = 'Q3_MeVDlCBtY2Vbd1f6mhtut'
