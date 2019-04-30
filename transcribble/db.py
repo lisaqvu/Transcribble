@@ -15,7 +15,6 @@
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 
-
 builtin_list = list
 
 
@@ -45,8 +44,7 @@ class File(db.Model):
     audioUrl = db.Column(db.String(255))
     subtitleUrl = db.Column(db.String(255))
     createdBy = db.Column(db.String(255))
-    createdById = db.Column(db.String(255))
-
+    
     def __repr__(self):
         return "<File(title='%s', createdBy=%s)" % (self.title, self.createdBy)
 
@@ -59,27 +57,32 @@ def list(limit=10, cursor=None):
              .offset(cursor))
     files = builtin_list(map(from_sql, query.all()))
     next_page = cursor + limit if len(files) == limit else None
-    return (books, next_page)
+    return (files, next_page)
 
-# def create(data):
-#     book = Book(**data)
-#     db.session.add(book)
-#     db.session.commit()
-#     return from_sql(book)
-
-
-# def update(data, id):
-#     book = Book.query.get(id)
-#     for k, v in data.items():
-#         setattr(book, k, v)
-#     db.session.commit()
-#     return from_sql(book)
+def read(id):
+    result = files.query.get(id)
+    if not result:
+        return None
+    return from_sql(result)
 
 
-# def delete(id):
-#     Book.query.filter_by(id=id).delete()
-#     db.session.commit()
+def create(data):
+    one_file = File(**data)
+    db.session.add(one_file)
+    db.session.commit()
+    return from_sql(one_file)
 
+
+def update(data, id):
+    one_file = File.query.get(id)
+    for k, v in data.items():
+        setattr(one_file, k, v)
+    db.session.commit()
+    return from_sql(one_file)
+
+def delete(id):
+    File.query.filter_by(id=id).delete()
+    db.session.commit()
 
 def _create_database():
     """
