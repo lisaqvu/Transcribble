@@ -20,6 +20,7 @@ def speechToText(audio_uri, lang = 'en-US', speaker_num = 1):
 
   # Get the transcription
   operation = client.long_running_recognize(config, audio)
+
   response = operation.result(timeout=90)
 
   return response
@@ -55,6 +56,7 @@ def parseSecond(sec, nano):
   return hour + ':' + minute + ':' + sec + ',' + mili
 
 def parseTranscription(response):
+
   trans = Transcription([],[])
 
   for i in range(len(response.results)):
@@ -71,14 +73,6 @@ def parseTranscription(response):
 
       if end_word < len(result.words):
         end_word -= 1
-        start_time = parseSecond(result.words[start_word].start_time.seconds, result.words[start_word].start_time.nanos)
-        end_time = parseSecond(result.words[end_word].start_time.seconds, result.words[end_word].start_time.nanos)
-        sentence = Sentence(Timestamp(start_time, end_time), content, speaker_tag = speaker)
-        trans.appendSentence(sentence)
-        start_word = end_word + 1
-        end_word = end_word + 1
-        content = ''
-        speaker = result.words[start_word].speaker_tag
       elif end_word == len(result.words):
         end_word -= 1
         start_time = parseSecond(result.words[start_word].start_time.seconds, result.words[start_word].start_time.nanos)
