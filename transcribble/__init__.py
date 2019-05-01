@@ -84,8 +84,13 @@ def create_app(config):
         )
         url = blob.public_url.replace('https://storage.googleapis.com/', 'gs://')
         output = SpeechToText.speechToText(url)
+        textobject = SpeechToText.parseTranscription(output)
+
+        output_as_dict = textobject.getDict()
+        from . import Translate
+        translated = Translate.translate(textobject, "en", "vn")
         # The public URL can be used to directly access the uploaded file via HTTP.
-        return output
+        return "hello"
         #return render_template("edit.html", title=upload_file.filename, post=output)
     # with app.app_context():
     #     model = get_model()

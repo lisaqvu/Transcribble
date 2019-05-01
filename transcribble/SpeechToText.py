@@ -1,4 +1,4 @@
-from Transcription import Transcription
+from .Transcription import Transcription
 # Using Google Api to get the transcription of the audio given its uri
 def speechToText(audio_uri, lang = 'en-US', speaker_num = 1):
   from google.cloud import speech_v1p1beta1 as speech

@@ -39,11 +39,7 @@ The result will be a new Transcription (this is a misnomer) object.
 ### Export 
 There is an export method within each Transcription object. Simply call `[TRANSCRIPTION_OBJECT].srt(file_name, dir)`. The extension of file_name must be explicitly declared (.srt/.txt).
 
-<<<<<<< HEAD
 There is an ExportToZip.py that allows the user to get all the files that they were working with as a zip file.
-=======
-There is an `ExportToZip.py` file that allows the user to get all the files that they were working with as a zip file.
->>>>>>> 7bb50809bdb596b492284ebf0ef8a677e0339e31
 
 ### Other files
 endpoints, export, LangSelection are helpers file for the front end of the app.
