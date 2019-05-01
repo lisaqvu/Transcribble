@@ -79,3 +79,8 @@ def parseVideo(file, start_time = -1, end_time = -1):
     audioclip = AudioFileClip(file)
     audioclip.write_audiofile(temp_file)
     parseAudio(temp_file, start_time = -1, end_time = -1)
+# import wget
+
+# file_url = 'http://johndoe.com/download.zip'
+
+# file_name = wget.download(file_url)
