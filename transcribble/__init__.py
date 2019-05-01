@@ -6,9 +6,8 @@ from google.cloud import storage
 import logging
 import yaml, json
 
-from . import db
+#from . import db
 
-import httplib2
 # from oauth2client.contrib.flask_util import UserOAuth2
 
 # oauth2 = UserOAuth2()
