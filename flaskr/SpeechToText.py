@@ -1,3 +1,4 @@
+from Transcription import *
 # Using Google Api to get the transcription of the audio given its uri
 def speechToText(audio_uri, lang = 'en-US', speaker_num = 1):
   from google.cloud import speech_v1p1beta1 as speech
@@ -69,6 +70,7 @@ def parseTranscription(response):
         end_word += 1
 
       if end_word < len(result.words):
+        end_word -= 1
         start_time = parseSecond(result.words[start_word].start_time.seconds, result.words[start_word].start_time.nanos)
         end_time = parseSecond(result.words[end_word].start_time.seconds, result.words[end_word].start_time.nanos)
         sentence = Sentence(Timestamp(start_time, end_time), content, speaker_tag = speaker)
@@ -77,5 +79,12 @@ def parseTranscription(response):
         end_word = end_word + 1
         content = ''
         speaker = result.words[start_word].speaker_tag
+      elif end_word == len(result.words):
+        end_word -= 1
+        start_time = parseSecond(result.words[start_word].start_time.seconds, result.words[start_word].start_time.nanos)
+        end_time = parseSecond(result.words[end_word].start_time.seconds, result.words[end_word].start_time.nanos)
+        sentence = Sentence(Timestamp(start_time, end_time), content, speaker_tag = speaker)
+        trans.appendSentence(sentence)
+        end_word = end_word + 1
 
   return trans
