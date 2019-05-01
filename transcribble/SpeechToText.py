@@ -1,4 +1,4 @@
-from Transcription import Transcription
+from .Transcription import *
 # Using Google Api to get the transcription of the audio given its uri
 def speechToText(audio_uri, lang = 'en-US', speaker_num = 1):
   from google.cloud import speech_v1p1beta1 as speech
@@ -11,14 +11,16 @@ def speechToText(audio_uri, lang = 'en-US', speaker_num = 1):
 
 
   config = speech.types.RecognitionConfig(
-    language_code = lang,
-    enable_speaker_diarization = True,
-    diarization_speaker_count=speaker_num,
-    enable_word_time_offsets=True,
-    enable_automatic_punctuation=True
+  language_code = lang,
+  enable_speaker_diarization = True,
+  diarization_speaker_count=speaker_num,
+  enable_word_time_offsets=True,
+  enable_automatic_punctuation=True
   )
+
   # Get the transcription
-  operation = client.long_running_recognize(config=config, audio=audio)
+  operation = client.long_running_recognize(config, audio)
+
   response = operation.result(timeout=90)
 
   return response
@@ -54,7 +56,8 @@ def parseSecond(sec, nano):
   return hour + ':' + minute + ':' + sec + ',' + mili
 
 def parseTranscription(response):
-  trans = Transcription()
+
+  trans = Transcription([],[])
 
   for i in range(len(response.results)):
     result = response.results[i].alternatives[0]
@@ -69,14 +72,13 @@ def parseTranscription(response):
         end_word += 1
 
       if end_word < len(result.words):
+        end_word -= 1
+      elif end_word == len(result.words):
+        end_word -= 1
         start_time = parseSecond(result.words[start_word].start_time.seconds, result.words[start_word].start_time.nanos)
         end_time = parseSecond(result.words[end_word].start_time.seconds, result.words[end_word].start_time.nanos)
         sentence = Sentence(Timestamp(start_time, end_time), content, speaker_tag = speaker)
         trans.appendSentence(sentence)
-        start_word = end_word + 1
         end_word = end_word + 1
-        content = ''
-        speaker = result.words[start_word].speaker_tag
 
   return trans
-

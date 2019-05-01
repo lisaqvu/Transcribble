@@ -1,10 +1,9 @@
-def translate(transcription, lang1, lang2):
-    from Transcription import *
-    from google.cloud import translate
+from .Transcription import *
+from google.cloud import translate as gcloud
 
-    client = translate.Client()
-
-    trans = Transcription()
+def translator(transcription, lang1, lang2):
+    client = gcloud.Client()
+    trans = Transcription([],[])
 
     for sentence in transcription.sentences():
         content = client.translate(sentence.content(),source_language = lang1, target_language = lang2)

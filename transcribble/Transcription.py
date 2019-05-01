@@ -130,7 +130,10 @@ class Transcription:
 
         return res
 
-    def storeRaw(self, file_name, dir):
+
+    # def storeRaw(self, file_name, dir):
+    def getDict(self):
+
         # The extension of file_name must be explicitly declared (.json)
         store = {'speakers':self.__speakers, 'sentences':[]}
         for sentence in self.__sentences:
@@ -140,13 +143,16 @@ class Transcription:
                    }
             store['sentences'] += [dic]
 
-        import json
-        import os
-        json_dic = json.dumps(store)
-        file_dir = os.path.join(dir, file_name)
-        f = open(file_dir, "w")
-        f.write(json_dic)
-        f.close()
+
+        return store
+        # import json
+        # import os
+        # json_dic = json.dumps(store)
+        # return json_disc
+        # file_dir = os.path.join(dir, file_name)
+        # f = open(file_dir, "w")
+        # f.write(json_dic)
+        # f.close()
 
     def recoverRaw(file_dir):
         import json
