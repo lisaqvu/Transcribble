@@ -1,7 +1,7 @@
 import os
 
 from flask_environments import Environments
-from flask import request, Flask, session, render_template
+from flask import request, Flask, session, render_template, redirect, Response
 from google.cloud import storage
 import logging
 import yaml, json
@@ -50,8 +50,7 @@ def create_app(config):
         # Get the bucket that the file will be uploaded to.
         bucket = gcs.get_bucket(CLOUD_STORAGE_BUCKET)
 
-        # filename = uploaded_file.filename
-        # filename, file_extension = os.path.splitext(filename)
+
         # if (file_extension != 'wav'):
         #     uploaded_file = AudioFileClip(uploaded_file)
 
@@ -63,21 +62,26 @@ def create_app(config):
             content_type=uploaded_file.content_type
         )
 
+        file_name = uploaded_file.filename
+        file_name, file_extension = os.path.splitext(file_name)
 
         url = blob.public_url.replace('https://storage.googleapis.com/', 'gs://')
         output = SpeechToText.speechToText(url)
         parsedfile = SpeechToText.parseTranscription(output)
-        file_name=uploaded_file.filename
         session['file'] = parsedfile.getDict()
         session['name'] = file_name
-
         return render_template("edit.html", filename=file_name, dict_object=parsedfile.getDict(), langlist=langs)
 
     @app.route("/edit", methods=['POST'])
     def edit():
-        from . import Transcription
-        current = Transcription.makeObjectFromDict(request.form.to_dict())
-        return render_template("edit.html", filename="test", dict_object=current.toDict(), langlist=langs)
+        current = Transcription.makeObjectFromForm(request.form.to_dict())
+        current_as_dict = current.getDict()
+        session['file'] = current_as_dict
+        if "update" in request.form:
+            return render_template("edit.html", filename=session['name'], dict_object=current_as_dict, langlist=langs)
+
+        elif "export" in request.form:
+            return redirect("/download")
 
     @app.route("/translate", methods=['POST'])
     def translate():
@@ -90,7 +94,17 @@ def create_app(config):
         file_name=session['name']
         return render_template("edit.html", filename=file_name, dict_object=translated_as_dict, langlist=langs)
     
+    @app.route("/download", methods=["GET"])
+    def download():
+        current = session['file']
+        srt = Transcription.makeObjectFromDict(current).srt()
+        print(srt)
 
+        return Response(
+        srt,
+        mimetype="text/srt",
+        headers={"Content-disposition":
+                 ("attachment; filename=" + session["name"]+".srt")})
     @app.errorhandler(500)
     def server_error(e):
         logging.exception('An error occurred during a request.')

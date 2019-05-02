@@ -154,16 +154,17 @@ class Transcription:
         # f.write(json_dic)
         # f.close()
 
-    def srt(self, file_name, dir):
+    def srt(self):
         # The extension of file_name must be explicitly declared (.srt/.txt)
-        import os
+        #import os
 
-        abs_dir = os.path.join(dir, file_name)
-        f = open(abs_dir, "w")
+        #abs_dir = os.path.join(dir, file_name)
+        f = ""
         for i in range(len(self.__sentences)):
-            f.write(self.displaySentenceAt(i))
-            f.write('\n\n')
-        f.close()
+            f += (self.displaySentenceAt(i))
+            f += ('\n\n')
+        #f.close()
+        return f
 
 def makeObjectFromDict(dic):
     # import json
@@ -186,15 +187,16 @@ def makeObjectFromForm(paragraph):
     # import json
     # f = open(file_dir, 'r')
     # dic = json.loads(f.read())
+    
     sentences = []
-    for sentence in paragraph:
-        time = Timestamp(sentence['start_time'], sentence['end_time'])
-        temp = Sentence(time, sentence['content'], sentence['speaker_tag'])
+    for i in range(1, int(len(paragraph)/3)):
+        time = Timestamp(paragraph.get('start_time'+str(i)), paragraph.get('end_time'+str(i)))
+        temp = Sentence(time, paragraph.get('content'+str(i)), 1)
         sentences += [temp]
 
-    speakers = {}
-    for speaker_tag in dic['speakers']:
-        # the json will automatically convert keys in a dict from int to string
-        speakers[int(speaker_tag)] = dic['speakers'][speaker_tag]
+    # speakers = {}
+    # for speaker_tag in dic['speakers']:
+    #     # the json will automatically convert keys in a dict from int to string
+    #     speakers[int(speaker_tag)] = dic['speakers'][speaker_tag]
 
-    return Transcription(sentences = sentences, speakers = speakers)    
+    return Transcription(sentences = sentences, speakers = [])    
