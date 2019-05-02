@@ -1,7 +1,7 @@
 import os
 
 from flask_environments import Environments
-from flask import request, Flask, render_template
+from flask import request, Flask, session, render_template
 from google.cloud import storage
 import logging
 import yaml, json
@@ -68,6 +68,8 @@ def create_app(config):
         output = SpeechToText.speechToText(url)
         parsedfile = SpeechToText.parseTranscription(output)
         file_name=uploaded_file.filename
+        session['file'] = parsedfile.getDict()
+        session['name'] = file_name
 
         return render_template("edit.html", filename=file_name, dict_object=parsedfile.getDict(), langlist=langs)
 
@@ -79,10 +81,14 @@ def create_app(config):
 
     @app.route("/translate", methods=['POST'])
     def translate():
-
         target = request.form['languagePicker']
+        parsedfile = Transcription.makeObjectFromDict(session.get('file'))
         translated = Translate.translator(parsedfile, target)
-        return render_template("edit.html", filename=file_name, dict_object=translated.getDict(), langlist=langs)
+
+        translated_as_dict = translated.getDict()
+        session['file'] = translated_as_dict
+        file_name=session['name']
+        return render_template("edit.html", filename=file_name, dict_object=translated_as_dict, langlist=langs)
     
 
     @app.errorhandler(500)
