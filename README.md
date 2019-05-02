@@ -27,12 +27,12 @@ The `speechToText` function accept the uri input in the format `gs://[GCLOUD_STO
 
 Make sure that your input file is a **wav** file. Then go to SpeechToText.py and run `speechToText('[FILE_URL]')`. You can also change the language to one that is supported by Google API (the list of all the available languages is in TranscriptionLangs.json). It might take a while, but the response is a dictionary for further usage.
 
-We also have a test file available at `gs://transcribble/test.wav`
+We also have a test file available at `gs://transcribble/test.wav` and `gs://transcribble/test_short.wav`
 
 SpeechToText.py includes a utility function calls `parseTranscription` that will parse the response into a Transcription object that will be used throughout the app.
 
 ### Translate.py
-After getting the Transcription object from speechToText, go to Translate.py and use the `translate([TRANSCRIPTION_OBJECT], [ORIGINAL_LANGUAGE], [TARGET_LANGUAGE])`. The list of all supported languages is in TranslationLangs.json.
+After getting the Transcription object from speechToText, go to Translate.py and use the `translator([TRANSCRIPTION_OBJECT], [TARGET_LANGUAGE], [ORIGINAL_LANGUAGE])`. The list of all supported languages is in TranslationLangs.json.
 
 The result will be a new Transcription (this is a misnomer) object.
 

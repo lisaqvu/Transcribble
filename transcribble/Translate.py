@@ -1,7 +1,7 @@
 from .Transcription import *
 from google.cloud import translate as gcloud
 
-def translator(transcription, lang1, lang2):
+def translator(transcription, lang2, lang1="en"):
     client = gcloud.Client()
     trans = Transcription([],[])
 

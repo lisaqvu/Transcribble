@@ -5,8 +5,11 @@ from flask import request, Flask, render_template
 from google.cloud import storage
 import logging
 import yaml, json
-
+from . import Translate, Transcription, SpeechToText
 #from . import db
+from moviepy.editor import *
+
+#import httplib2
 
 # from oauth2client.contrib.flask_util import UserOAuth2
 
@@ -14,37 +17,14 @@ import yaml, json
 
 with open('././app.yaml') as f:
     envfile = yaml.safe_load(f)
+with open('././TranslationLangs.json') as json_file:  
+    langs = json.load(json_file)
 
-#def create_app(config, debug=False, testing=False, config_overrides=None):
 def create_app(config):
     # create and configure the app
-    # app = Flask(__name__, instance_relative_config=True)
-
-    # if test_config is None:
-    #     # load the instance config, if it exists, when not testing
-    #     app.config.from_pyfile('config.py', silent=True)
-    # else:
-    #     # load the test config if passed in
-    #     app.config.from_mapping(test_config)
-
-    # # ensure the instance folder exists
-    # try:
-    #     os.makedirs(app.instance_path)
-    # except OSError:
-    #     pass
-
     app = Flask(__name__)
     app.config.from_object(config)
 
-    # app.debug = debug
-    # app.testing = testing
-
-    # if config_overrides:
-    #     app.config.update(config_overrides)
-
-    # # Configure logging
-    # if not app.testing:
-    #     logging.basicConfig(level=logging.INFO)
     # hacky fix
     app.config.update(envfile['env_variables'])
     os.environ.update(envfile['env_variables'])
@@ -56,14 +36,11 @@ def create_app(config):
         # return render_template("base.html")
         return render_template("upload.html")
 
-    # HELPER TO GET NEXT ID FROM SQL
 
     @app.route('/upload', methods=['POST'])
     def upload():
         """Process the uploaded file and upload it to Google Cloud Storage."""
         uploaded_file = request.files.get('file')
-
-        from. import SpeechToText
 
         if not uploaded_file:
             return 'No file uploaded.', 400
@@ -74,6 +51,11 @@ def create_app(config):
         # Get the bucket that the file will be uploaded to.
         bucket = gcs.get_bucket(CLOUD_STORAGE_BUCKET)
 
+        # filename = uploaded_file.filename
+        # filename, file_extension = os.path.splitext(filename)
+        # if (file_extension != 'wav'):
+        #     uploaded_file = AudioFileClip(uploaded_file)
+
         # Create a new blob and upload the file's content.
         blob = bucket.blob(uploaded_file.filename)
 
@@ -81,42 +63,28 @@ def create_app(config):
             uploaded_file.read(),
             content_type=uploaded_file.content_type
         )
+
+
         url = blob.public_url.replace('https://storage.googleapis.com/', 'gs://')
         output = SpeechToText.speechToText(url)
-        textobject = SpeechToText.parseTranscription(output)
+        parsedfile = SpeechToText.parseTranscription(output)
+        file_name=uploaded_file.filename
 
-        output_as_dict = textobject.getDict()
-        from . import Translate
-        translated = Translate.translate(textobject, "en", "vn")
-        # The public URL can be used to directly access the uploaded file via HTTP.
-        return render_template("edit.html")
-        #return render_template("edit.html", title=upload_file.filename, post=output)
-    # with app.app_context():
-    #     model = get_model()
-    #     model.init_app(app)
+        return render_template("edit.html", filename=file_name, dict_object=parsedfile.getDict(), langlist=langs)
 
-    @app.route('/edit')
+    @app.route("/edit", methods=['POST'])
     def edit():
-        return render_template("edit.html")
+        from . import Transcription
+        current = Transcription.makeObjectFromDict(request.form.to_dict())
+        return render_template("edit.html", filename="test", dict_object=current.toDict(), langlist=langs)
 
-        # [START init_app]
-    # Initalize the OAuth2 helper.
-    # oauth2.init_app(
-    #     app,
-    #     scopes=['email', 'profile'],
-    #     authorize_callback=_request_user_info)
-    # [END init_app]
+    @app.route("/translate", methods=['POST'])
+    def translate():
 
-    # [START logout]
-    # Add a logout handler.
-    @app.route('/logout')
-    def logout():
-        # Delete the user's profile and the credentials stored by oauth2.
-        del session['profile']
-        session.modified = True
-        oauth2.storage.delete()
-        return redirect(request.referrer or '/')
-    # [END logout]
+        target = request.form['languagePicker']
+        translated = Translate.translator(parsedfile, target)
+        return render_template("edit.html", filename=file_name, dict_object=translated.getDict(), langlist=langs)
+    
 
     @app.errorhandler(500)
     def server_error(e):
@@ -142,27 +110,3 @@ def create_app(config):
 
     return app
 
-# def get_model():
-#     from . import db
-#     model = db
-#     return model    
-
-# # [START request_user_info]
-# def _request_user_info(credentials):
-#     """
-#     Makes an HTTP request to the Google OAuth2 API to retrieve the user's basic
-#     profile information, including full name and photo, and stores it in the
-#     Flask session.
-#     """
-#     http = httplib2.Http()
-#     credentials.authorize(http)
-#     resp, content = http.request(
-#         'https://www.googleapis.com/oauth2/v3/userinfo')
-
-#     if resp.status != 200:
-#         current_app.logger.error(
-#             "Error while obtaining user profile: \n%s: %s", resp, content)
-#         return None
-#     session['profile'] = json.loads(content.decode('utf-8'))
-
-# [END request_user_info]    
