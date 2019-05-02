@@ -64,13 +64,13 @@ def create_app(config):
 
         file_name = uploaded_file.filename
         file_name, file_extension = os.path.splitext(file_name)
-
+        session['link'] = blob.public_url
         url = blob.public_url.replace('https://storage.googleapis.com/', 'gs://')
         output = SpeechToText.speechToText(url)
         parsedfile = SpeechToText.parseTranscription(output)
         session['file'] = parsedfile.getDict()
         session['name'] = file_name
-        return render_template("edit.html", filename=file_name, dict_object=parsedfile.getDict(), langlist=langs)
+        return render_template("edit.html", filelink = session['link'], filename=file_name, dict_object=parsedfile.getDict(), langlist=langs)
 
     @app.route("/edit", methods=['POST'])
     def edit():
@@ -78,7 +78,7 @@ def create_app(config):
         current_as_dict = current.getDict()
         session['file'] = current_as_dict
         if "update" in request.form:
-            return render_template("edit.html", filename=session['name'], dict_object=current_as_dict, langlist=langs)
+            return render_template("edit.html", filelink = session['link'], filename=session['name'], dict_object=current_as_dict, langlist=langs)
 
         elif "export" in request.form:
             return redirect("/download")
@@ -92,7 +92,7 @@ def create_app(config):
         translated_as_dict = translated.getDict()
         session['file'] = translated_as_dict
         file_name=session['name']
-        return render_template("edit.html", filename=file_name, dict_object=translated_as_dict, langlist=langs)
+        return render_template("edit.html", filelink = session['link'], filename=file_name, dict_object=translated_as_dict, langlist=langs)
     
     @app.route("/download", methods=["GET"])
     def download():
