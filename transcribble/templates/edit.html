@@ -3,8 +3,19 @@
 {% block title %}{{ filename }}{% endblock %}
 
 {% block body %}
-<h2 class="text-center">Edit</h2>
-<form method="POST">
+<h2 class="text-center" style="margin-bottom:20px;">Edit</h2>
+<div class="container" style="text-align:right;">
+<form method="POST" action="/translate">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+  <select name="languagePicker">
+    {% for lang, value in langlist.items() %}
+    <option value="{{value}}">{{ lang }}</option>
+    {% endfor %}
+  </select>
+  <button class="btn" type="submit" value="submit">Translate</button>
+</form>
+</div>
+<form method="POST" action="/edit">
   <div class="title" style="font-size:30px;">
     <label for="title"><b>{{ filename }}</b></label>
   </div>
@@ -13,20 +24,19 @@
     <div class="col-3 subtitle">End time</div>
     <div class="col-6 subtitle">Content</div>
   </div>
-  <div class="form-group" style="overflow-y: scroll; height: 350px; overflow-x:hidden;">
-
+  <div class="form-group" style="overflow-y: scroll; height: 300px; overflow-x:hidden;">
     {% for sentence in dict_object['sentences']%}
     <div class="row">
       <div class="col-3"> <textarea class="form-control" id="line" name="start_time" rows="2" required
           style="resize:none;">{{sentence['timestamp']['start_time']}}</textarea></div>
       <div class="col-3"> <textarea class="form-control" id="line" name="end_time" rows="2" required
           style="resize:none;">{{sentence['timestamp']['end_time']}}</textarea></div>
-      <div class="col-6" style="padding-right:0;"> <textarea class="form-control" id="line" name="content" rows="2" required
-          style="resize:none;">{{sentence['content']}}</textarea>
+      <div class="col-6" style="padding-right:0;"> <textarea class="form-control" id="line" name="content" rows="2"
+          required style="resize:none;">{{sentence['content']}}</textarea>
       </div>
     </div>
     {%endfor%}
   </div>
-  <button class="btn btn-primary submit-btn" type="submit" href="/edit">Update</button>
+  <button class="btn btn-primary submit-btn" type="submit" value="submit">Update</button>
 </form>
 {% endblock %}

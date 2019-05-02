@@ -154,23 +154,6 @@ class Transcription:
         # f.write(json_dic)
         # f.close()
 
-    def recoverRaw(file_dir):
-        import json
-        f = open(file_dir, 'r')
-        dic = json.loads(f.read())
-        sentences = []
-        for sentence in dic['sentences']:
-            time = Timestamp(sentence['timestamp']['start_time'], sentence['timestamp']['end_time'])
-            temp = Sentence(time, sentence['content'], sentence['speaker_tag'])
-            sentences += [temp]
-
-        speakers = {}
-        for speaker_tag in dic['speakers']:
-            # the json will automatically convert keys in a dict from int to string
-            speakers[int(speaker_tag)] = dic['speakers'][speaker_tag]
-
-        return Transcription(sentences = sentences, speakers = speakers)
-
     def srt(self, file_name, dir):
         # The extension of file_name must be explicitly declared (.srt/.txt)
         import os
@@ -181,3 +164,37 @@ class Transcription:
             f.write(self.displaySentenceAt(i))
             f.write('\n\n')
         f.close()
+
+def makeObjectFromDict(dic):
+    # import json
+    # f = open(file_dir, 'r')
+    # dic = json.loads(f.read())
+    sentences = []
+    for sentence in dic['sentences']:
+        time = Timestamp(sentence['timestamp']['start_time'], sentence['timestamp']['end_time'])
+        temp = Sentence(time, sentence['content'], sentence['speaker_tag'])
+        sentences += [temp]
+
+    speakers = {}
+    for speaker_tag in dic['speakers']:
+        # the json will automatically convert keys in a dict from int to string
+        speakers[int(speaker_tag)] = dic['speakers'][speaker_tag]
+
+    return Transcription(sentences = sentences, speakers = speakers)
+ 
+def makeObjectFromForm(paragraph):
+    # import json
+    # f = open(file_dir, 'r')
+    # dic = json.loads(f.read())
+    sentences = []
+    for sentence in paragraph:
+        time = Timestamp(sentence['start_time'], sentence['end_time'])
+        temp = Sentence(time, sentence['content'], sentence['speaker_tag'])
+        sentences += [temp]
+
+    speakers = {}
+    for speaker_tag in dic['speakers']:
+        # the json will automatically convert keys in a dict from int to string
+        speakers[int(speaker_tag)] = dic['speakers'][speaker_tag]
+
+    return Transcription(sentences = sentences, speakers = speakers)    
