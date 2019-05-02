@@ -21,12 +21,13 @@
       <button class="btn" type="submit" value="submit">Translate</button>
     </form>
   </div>
+
 </div>
 <form method="POST" action="/edit">
   <div class="title" style="font-size:30px;">
     <label for="title"><b>{{ filename }}</b></label>
   </div>
-  <div class="row">
+  <div class="row" >
     <div class="col-3 subtitle">Start time</div>
     <div class="col-3 subtitle">End time</div>
     <div class="col-6 subtitle">Content</div>
@@ -40,6 +41,7 @@
           style="resize:none;">{{sentence['timestamp']['end_time']}}</textarea></div>
       <div class="col-6" style="padding-right:0;"> <textarea class="form-control" id="line" name="content{{loop.index}}"
           rows="2" required style="resize:none;">{{sentence['content']}}</textarea>
+
       </div>
 
     </div>
