@@ -93,3 +93,7 @@ hr.bottom {
 .hidden {
   display: inline;
 }
+
+.subtitle {
+  font-size: 20px;
+}

@@ -6,9 +6,9 @@ from google.cloud import storage
 import logging
 import yaml, json
 
-from . import db
+#from . import db
 
-import httplib2
+#import httplib2
 # from oauth2client.contrib.flask_util import UserOAuth2
 
 # oauth2 = UserOAuth2()
@@ -85,20 +85,19 @@ def create_app(config):
         url = blob.public_url.replace('https://storage.googleapis.com/', 'gs://')
         output = SpeechToText.speechToText(url)
         textobject = SpeechToText.parseTranscription(output)
-
         output_as_dict = textobject.getDict()
-        from . import Translate
-        translated = Translate.translate(textobject, "en", "vn")
+        print(output_as_dict)
+        # from . import Translate
+        # translated = Translate.translate(textobject, "en", "vn")
         # The public URL can be used to directly access the uploaded file via HTTP.
-        return render_template("edit.html")
         #return render_template("edit.html", title=upload_file.filename, post=output)
+        #sample = {'speakers': [], 'sentences': [{'timestamp': {'start_time': '00:00:00,200', 'end_time': '00:00:02,500'}, 'content': 'the Birch canoes lid on the smooth planks ', 'speaker_tag': 0}, {'timestamp': {'start_time': '00:00:03,900', 'end_time': '00:00:05,800'}, 'content': 'glue the seat to the dark blue background ', 'speaker_tag': 0}, {'timestamp': {'start_time': '00:00:07,500', 'end_time': '00:00:09,400'}, 'content': 'it is easy to tell the death of a well. ', 'speaker_tag': 0}, {'timestamp': {'start_time': '00:00:10,600', 'end_time': '00:00:12,400'}, 'content': 'These days a chicken leg has a word dish. ', 'speaker_tag': 0}, {'timestamp': {'start_time': '00:00:14,000', 'end_time': '00:00:15,800'}, 'content': 'Rice is often served in round bowls. ', 'speaker_tag': 0}, {'timestamp': {'start_time': '00:00:17,100', 'end_time': '00:00:19,000'}, 'content': 'Did use of lemon snakes find punch. ', 'speaker_tag': 0}, {'timestamp': {'start_time': '00:00:20,200', 'end_time': '00:00:22,100'}, 'content': 'The box was down beside the park truck. ', 'speaker_tag': 0}, {'timestamp': {'start_time': '00:00:23,500', 'end_time': '00:00:25,300'}, 'content': 'the Hogs of the popcorn and garbage ', 'speaker_tag': 0}, {'timestamp': {'start_time': '00:00:26,900', 'end_time': '00:00:28,700'}, 'content': '4 hours of study work face to us ', 'speaker_tag': 0}, {'timestamp': {'start_time': '00:00:00,200', 'end_time': '00:00:31,900'}, 'content': 'to us a large size in stockings is hard to sell. ', 'speaker_tag': 1}]}
+        return render_template("edit.html", filename=uploaded_file.filename, dict_object=output_as_dict)
     # with app.app_context():
     #     model = get_model()
     #     model.init_app(app)
 
-    @app.route('/edit')
-    def edit():
-        return render_template("edit.html")
+
 
         # [START init_app]
     # Initalize the OAuth2 helper.
