@@ -7,7 +7,6 @@ import logging
 import yaml, json
 from . import Translate, Transcription, SpeechToText
 #from . import db
-from moviepy.editor import *
 
 #import httplib2
 
