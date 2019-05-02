@@ -99,8 +99,6 @@ def create_app(config):
     def download():
         current = session['file']
         srt = Transcription.makeObjectFromDict(current).srt()
-        print(srt)
-
         return Response(
         srt,
         mimetype="text/srt",
