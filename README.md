@@ -44,3 +44,6 @@ There is an ExportToZip.py that allows the user to get all the files that they w
 ### Other files
 endpoints, export, LangSelection are helpers file for the front end of the app.
 
+## Credits
+This project was built as part of Boston University's Spark! Innovation Fellowship using Google Cloud Platform and Flask. 
+
