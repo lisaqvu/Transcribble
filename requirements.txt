@@ -7,5 +7,5 @@ soundfile==0.10.2
 librosa==0.6.3
 google-cloud-speech==0.36.3
 google-cloud-translate==1.4.0
-grpcio==1.20.1
+grpcio==1.53.0
 googleapis-common-protos==1.5.3
